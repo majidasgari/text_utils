@@ -21,6 +21,11 @@ public class FileHandler {
         FileHandler.copyRoot = copyRoot;
     }
 
+    public static Path getPath(String name) throws IOException {
+        if (!prepareFile(null, name)) return null;
+        return Paths.get(copyRoot, name);
+    }
+
     public static Path getPath(String folder, String name) throws IOException {
         if (!prepareFile(folder, name)) return null;
         return Paths.get(copyRoot, folder, name);
@@ -28,7 +33,9 @@ public class FileHandler {
 
     public static boolean prepareFile(String folder, String... names) {
         for (String name : names) {
-            Path file = Paths.get(copyRoot, folder, name);
+            final Path file;
+            if (folder == null) file = Paths.get(copyRoot, name);
+            else file = Paths.get(copyRoot, folder, name);
             if (Files.exists(file)) return true;
             InputStream libraryInputStream = FileHandler.class.getResourceAsStream("/"
                     + (folder != null ? folder + "/" : "") + name);
