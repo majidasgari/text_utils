@@ -1,5 +1,6 @@
 package ir.ac.iust.text.utils;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
@@ -23,9 +24,10 @@ public class LoggerUtils {
             String filePath = System.getProperty("user.dir") + File.separator + filename;
             RollingFileAppender appender = new RollingFileAppender(LOG_PATTERN, filePath);
             appender.setName("Fast DP Log");
-            appender.setMaxFileSize("1MB");
+            appender.setMaxFileSize("10MB");
             appender.activateOptions();
             Logger.getRootLogger().addAppender(appender);
+            Logger.getRootLogger().setLevel(Level.ALL);
             initiated = true;
         } catch (IOException e) {
             e.printStackTrace();
