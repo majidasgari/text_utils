@@ -54,6 +54,20 @@ public class WordLine {
         return list;
     }
 
+    public void setSplit(int position, int value) {
+        splits[position] = String.valueOf(value);
+        text = StringUtils.join(splits, "\t");
+    }
+
+    public void setSplit(int position, String value) {
+        splits[position] = value;
+        text = StringUtils.join(splits, "\t");
+    }
+
+    public int getSplitAsInt(int position) {
+        return Integer.parseInt(splits[position]);
+    }
+
     @Override
     public String toString() {
         if(splits == null || splits.length == 0) return "";
@@ -66,5 +80,22 @@ public class WordLine {
         String toReturn = StringUtils.join(splits, "\t");
         splits[replaceIndex] = old;
         return toReturn;
+    }
+
+    public WordLine copy() {
+        return new WordLine(text);
+    }
+
+    public WordLine copy(int position, int value) {
+        WordLine line = new WordLine(text);
+        line.setSplit(position, value);
+        return line;
+    }
+
+    public WordLine copy(int position, String value) {
+        WordLine line = new WordLine(text);
+        splits[position] = value;
+        text = StringUtils.join(splits, "\t");
+        return line;
     }
 }
