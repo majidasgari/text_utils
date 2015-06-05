@@ -17,7 +17,8 @@ public class LoggerUtils {
 
     public static void initLogger(String filename) {
         try {
-            PatternLayout LOG_PATTERN = new PatternLayout("%5p %d{HH:mm:ss} - %m%n");
+//            PatternLayout LOG_PATTERN = new PatternLayout("%5p %d{HH:mm:ss} - %m%n");
+            PatternLayout LOG_PATTERN = new PatternLayout("%m%n");
             Logger.getRootLogger().getAppender("stdout").setLayout(LOG_PATTERN);
 
             //add file appender
@@ -27,7 +28,7 @@ public class LoggerUtils {
             appender.setMaxFileSize("10MB");
             appender.activateOptions();
             Logger.getRootLogger().addAppender(appender);
-            Logger.getRootLogger().setLevel(Level.ALL);
+            Logger.getRootLogger().setLevel(Level.INFO);
             initiated = true;
         } catch (IOException e) {
             e.printStackTrace();

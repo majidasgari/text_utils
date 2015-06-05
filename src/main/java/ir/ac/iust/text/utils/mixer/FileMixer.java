@@ -1,12 +1,11 @@
 package ir.ac.iust.text.utils.mixer;
 
-import ir.ac.iust.text.utils.WordLine;
+import ir.ac.iust.text.utils.ColumnedLine;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,24 +16,24 @@ public class FileMixer {
     public static void mix(Path file1, String splitter1,
                            Path file2, String splitter2,
                            Path output, Column... columns) throws IOException {
-        List<WordLine> lines1 = WordLine.getLines(file1, splitter1);
+        List<ColumnedLine> lines1 = ColumnedLine.getLines(file1, splitter1);
         removeTailedEmptyLines(lines1);
-        List<WordLine> lines2 = WordLine.getLines(file2, splitter2);
+        List<ColumnedLine> lines2 = ColumnedLine.getLines(file2, splitter2);
         removeTailedEmptyLines(lines2);
         List<String> outputLines = new ArrayList<>();
         if (lines1.size() != lines2.size())
             return;
         StringBuilder builder = new StringBuilder();
         for (int i = 0, lines1Size = lines1.size(); i < lines1Size; i++) {
-            WordLine line1 = lines1.get(i);
-            WordLine line2 = lines2.get(i);
+            ColumnedLine line1 = lines1.get(i);
+            ColumnedLine line2 = lines2.get(i);
             builder.setLength(0);
-            if (!line1.isEmpty)
+            if (!line1.isEmpty())
                 for (Column column : columns) {
-                    WordLine line = (column.getFileIndex() == 0 ? line1 : line2);
-                    builder.append(line.splits[column.getColumnIndex() < 0
-                            ? line.splits.length + column.getColumnIndex()
-                            : column.getColumnIndex()]).append('\t');
+                    ColumnedLine line = (column.getFileIndex() == 0 ? line1 : line2);
+                    builder.append(line.column(column.getColumnIndex() < 0
+                            ? line.getNumberOfColumns() + column.getColumnIndex()
+                            : column.getColumnIndex())).append('\t');
                 }
             else
                 builder.append('\t');
@@ -45,9 +44,9 @@ public class FileMixer {
         Files.write(output, outputLines, Charset.forName("UTF-8"));
     }
 
-    private static void removeTailedEmptyLines(List<WordLine> lines) {
+    private static void removeTailedEmptyLines(List<ColumnedLine> lines) {
         for (int i = lines.size() - 1; i >= 0; i--)
-            if (lines.get(i).isEmpty)
+            if (lines.get(i).isEmpty())
                 lines.remove(i);
             else break;
     }
